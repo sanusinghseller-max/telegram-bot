@@ -24,7 +24,7 @@ async def run(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         # 👇 script run (arguments ke saath)
         result = subprocess.run(
-            ["python", "ddos", ip, port, duration, threads],
+            ["python", "ddos.py", ip, port, duration, threads],
             capture_output=True,
             text=True
         )
